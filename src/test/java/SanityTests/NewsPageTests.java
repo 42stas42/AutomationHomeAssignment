@@ -24,6 +24,7 @@ public class NewsPageTests extends CommonOptions {
     @Test(dataProvider = "newsDataProvider", dataProviderClass = NewsDataProvider.class)
     public void newsPageVerificationTests(String URL, NewsPage newsPage) {
 
+        //Print URL
         System.out.println("Start Test for the next URL:" + URL);
 
         //Go to URL
