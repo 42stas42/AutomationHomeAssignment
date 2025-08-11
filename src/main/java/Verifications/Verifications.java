@@ -4,12 +4,14 @@ import InfraObjects.NewsObject;
 import Utilities.CommonOptions;
 import Utilities.ConfigReader;
 import Utilities.DateUtils;
+import io.qameta.allure.Step;
 
 import java.util.List;
 import java.util.Locale;
 
 public class Verifications extends CommonOptions {
 
+    @Step("verifyNewsData")
     public static void verifyNewsData(List<NewsObject> newsObjectsList) {
 
         for (NewsObject news : newsObjectsList) {

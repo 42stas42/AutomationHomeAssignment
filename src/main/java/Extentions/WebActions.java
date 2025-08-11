@@ -1,6 +1,7 @@
 package Extentions;
 
 import Utilities.CommonOptions;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -54,6 +55,7 @@ public class WebActions extends CommonOptions {
         }
     }
 
+    @Step("run method safeFindAttribute")
     public static String safeFindAttribute(WebElement parent, By locator, String attribute) {
         try {
             WebElement element = parent.findElement(locator);

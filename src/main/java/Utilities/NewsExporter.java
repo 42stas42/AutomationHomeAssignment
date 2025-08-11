@@ -1,6 +1,7 @@
 package Utilities;
 
 import InfraObjects.NewsObject;
+import io.qameta.allure.Step;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class NewsExporter {
 
+    @Step("Export News Articles to file")
     public static void exportNews(List<NewsObject> newsObjectsList) {
         // Sort: date ascending, then type alphabetically
         newsObjectsList.sort(

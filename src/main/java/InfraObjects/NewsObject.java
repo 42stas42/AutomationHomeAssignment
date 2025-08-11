@@ -4,6 +4,8 @@ import Extentions.WebActions;
 import PageObjects.NewsPage;
 import Utilities.CommonOptions;
 import Utilities.DateUtils;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
@@ -75,8 +77,9 @@ public class NewsObject extends CommonOptions {
         this.absoluteConvertedDate = absoluteConvertedDate;
     }
 
+    @Step("RUN: storeNewsInfo method")
     public static List<NewsObject> storeNewsInfo(List<WebElement> webElementList, NewsPage newsPage) {
-
+        Allure.step("START Method storeNewsInfo");
         NewsObject newsObject;
         List<NewsObject> newsObjectsList = new ArrayList<>();
 
@@ -97,6 +100,7 @@ public class NewsObject extends CommonOptions {
 
         }
 
+        Allure.step("FINISH Method storeNewsInfo");
         return newsObjectsList;
     }
 }

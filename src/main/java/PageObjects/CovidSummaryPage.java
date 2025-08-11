@@ -1,5 +1,6 @@
 package PageObjects;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,6 +26,7 @@ public class CovidSummaryPage {
         return table13Rows;
     }
 
+    @Step("RUN method positivityFrom11")
     public Map<String, String> positivityFrom11(List<WebElement> table11Rows) {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < table11Rows.size(); i++) {
@@ -39,6 +41,7 @@ public class CovidSummaryPage {
         return map;
     }
 
+    @Step("RUN method positivityFrom13")
     public Map<String, String> positivityFrom13(List<WebElement> table13Rows) {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < table13Rows.size(); i++) {
@@ -46,7 +49,7 @@ public class CovidSummaryPage {
             if (tds.size() >= 3) {
                 String region = table13Rows.get(i).findElement(By.xpath("./th")).getText().trim();
                 String positivity = "";
-                positivity = tds.get(1).getText().trim();
+                positivity = tds.get(2).getText().trim();
                 map.put(region, positivity);
             }
         }
