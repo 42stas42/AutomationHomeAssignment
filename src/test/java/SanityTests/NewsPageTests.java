@@ -27,9 +27,6 @@ public class NewsPageTests extends CommonOptions {
     @Description("Go to WHO and APPLE sites --> Collect Articles by parameters --> Verify")
     public void newsPageVerificationTests(String URL, NewsPage newsPage) {
 
-        //Print URL
-        System.out.println("Start Test for the next URL:" + URL);
-
         //Go to URL
         Allure.step("Go to URL");
         webDriver.get(URL);

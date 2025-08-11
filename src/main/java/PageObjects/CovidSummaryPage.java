@@ -18,6 +18,12 @@ public class CovidSummaryPage {
     @FindBy(xpath = "//*[@id='PageContent_C570_Col00']//table//tbody/tr")
     private List<WebElement> table13Rows;
 
+    @FindBy(xpath = "//*[@id='PageContent_C676_Col00']//table//thead//th[5]")
+    WebElement table11Date;
+
+    @FindBy(xpath = "//*[@id='PageContent_C570_Col00']//table//thead//th[4]")
+    WebElement table13Date;
+
 
     public List<WebElement> getTable11Rows() {
         return table11Rows;
@@ -25,6 +31,14 @@ public class CovidSummaryPage {
 
     public List<WebElement> getTable13Rows() {
         return table13Rows;
+    }
+
+    public WebElement getTable11Date() {
+        return table11Date;
+    }
+
+    public WebElement getTable13Date() {
+        return table13Date;
     }
 
     @Step("RUN method positivityFrom11")

@@ -20,6 +20,9 @@ public class Covid19SummaryTests extends CommonOptions {
         Allure.step("Go to https://data.who.int/dashboards/covid19/summary");
         webDriver.get(ConfigReader.getProperty("URL_3"));
 
+        Allure.step("Verify: Dates between table 1.1 and 1.3");
+        Assert.assertEquals(covidSummaryPage.getTable11Date().getText(), covidSummaryPage.getTable13Date().getText(), "FAILURE: Dates between table 1.1 and 1.3 differ");
+
         //Load hash maps wit data from 1.1 and 1.3 tables accordingly
         Allure.step("Load hash maps wit data from 1.1 and 1.3 tables accordingly");
         Map<String, String> m11 = covidSummaryPage.positivityFrom11(covidSummaryPage.getTable11Rows());

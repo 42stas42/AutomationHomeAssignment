@@ -88,8 +88,15 @@ public class NewsObject extends CommonOptions {
             for (int i = 0; i < 5 && i < webElementList.size(); i++) {
                 Allure.step("Processing article at index: " + i);
 
-                String newsType = webElementList.get(i).findElement(newsPage.getNewsTypeBy()).getText();
+                String newsType = WebActions.safeFindText(webElementList.get(i), newsPage.getNewsTypeBy());
                 Allure.step("Detected news type: " + newsType);
+
+                // Skip if the date contains "X days ago" (case-insensitive)
+                String newsDate = WebActions.safeFindText(webElementList.get(i), newsPage.getTimeStampBy());
+                if (newsDate.toLowerCase().matches("\\d+\\s+days?\\s+ago")) {
+                    Allure.step("Article skipped because its date is relative ('X days ago').");
+                    continue;
+                }
 
                 // Fill list only with WHO Joint News Release / Statement or any article for other sites
                 if (!newsPage.equals(whoNewsPage) ||
