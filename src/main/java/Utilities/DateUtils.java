@@ -27,30 +27,49 @@ public class DateUtils {
      * @return Absolute date string or the original string if not relative.
      */
 
+    @Step("RUN method convertRelativeToAbsolute")
     public static String convertRelativeToAbsolute(String relativeDate, String format, ZoneId zoneId) {
-        if (relativeDate == null || relativeDate.isBlank()) {
+        try {
+            Allure.step("Starting convertRelativeToAbsolute with input: \"" + relativeDate + "\", format: \"" + format + "\", zoneId: " + zoneId);
+
+            if (relativeDate == null || relativeDate.isBlank()) {
+                Allure.step("Input is null or blank. Returning as is.");
+                return relativeDate;
+            }
+
+            String trimmed = relativeDate.trim();
+            LocalDate baseDate = LocalDate.now(zoneId);
+            Allure.step("Base date (today) in zoneId " + zoneId + ": " + baseDate);
+
+            Matcher m = DAYS_AGO.matcher(trimmed);
+            if (m.matches()) {
+                int days = Integer.parseInt(m.group(1));
+                String result = baseDate.minusDays(days)
+                        .format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
+                Allure.step("Matched DAYS_AGO (" + days + " days ago). Result: " + result);
+                return result;
+            }
+
+            if (TODAY.matcher(trimmed).matches()) {
+                String result = baseDate.format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
+                Allure.step("Matched TODAY. Result: " + result);
+                return result;
+            }
+
+            if (YESTERDAY.matcher(trimmed).matches()) {
+                String result = baseDate.minusDays(1)
+                        .format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
+                Allure.step("Matched YESTERDAY. Result: " + result);
+                return result;
+            }
+
+            Allure.step("No relative date match. Returning original value: \"" + relativeDate + "\"");
             return relativeDate;
+
+        } catch (Exception e) {
+            Allure.step("Error occurred in convertRelativeToAbsolute: " + e.getMessage());
+            return relativeDate; // fallback to original if error
         }
-
-        String trimmed = relativeDate.trim();
-        LocalDate baseDate = LocalDate.now(zoneId);
-
-        Matcher m = DAYS_AGO.matcher(trimmed);
-        if (m.matches()) {
-            int days = Integer.parseInt(m.group(1));
-            return baseDate.minusDays(days).format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
-        }
-
-        if (TODAY.matcher(trimmed).matches()) {
-            return baseDate.format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
-        }
-
-        if (YESTERDAY.matcher(trimmed).matches()) {
-            return baseDate.minusDays(1).format(DateTimeFormatter.ofPattern(format, Locale.ENGLISH));
-        }
-
-        // If it's not a relative date, return original
-        return relativeDate;
     }
 
     @Step("RUN method safeExtractYear")
