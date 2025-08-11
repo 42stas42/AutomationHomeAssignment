@@ -41,6 +41,7 @@ public class WebActions extends CommonOptions {
         js.executeScript("arguments[0].scrollIntoView({block: 'center', inline: 'nearest'})", webElement);
     }
 
+    @Step("run method safeFindText")
     public static String safeFindText(WebElement parent, By locator) {
         try {
             if (!parent.isDisplayed()) {

@@ -1,5 +1,8 @@
 package Utilities;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -65,13 +68,21 @@ public class DateUtils {
         return "***";
     }
 
+    @Step("RUN isValidDate")
     public static boolean isValidDate(String dateStr, String pattern, Locale locale) {
+        Allure.step("Validating date string: \"" + dateStr + "\" against pattern: \"" + pattern + "\" and locale: " + locale);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, locale);
         try {
             LocalDate parsedDate = LocalDate.parse(dateStr, formatter);
-            // Extra check: ensure that when we format back, it matches exactly
-            return formatter.format(parsedDate).equals(dateStr);
+            Allure.step("Parsed date: " + parsedDate);
+
+            boolean matches = formatter.format(parsedDate).equals(dateStr);
+            Allure.step("Formatted date back to string: \"" + formatter.format(parsedDate) + "\". Matches original: " + matches);
+
+            return matches;
         } catch (DateTimeParseException e) {
+            Allure.step("Date parsing failed for \"" + dateStr + "\": " + e.getMessage());
             return false;
         }
     }
