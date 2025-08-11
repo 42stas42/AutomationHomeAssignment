@@ -79,28 +79,52 @@ public class NewsObject extends CommonOptions {
 
     @Step("RUN: storeNewsInfo method")
     public static List<NewsObject> storeNewsInfo(List<WebElement> webElementList, NewsPage newsPage) {
-        Allure.step("START Method storeNewsInfo");
-        NewsObject newsObject;
         List<NewsObject> newsObjectsList = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            //Fill up the 'newsObjectsList' only with articles of type “Joint News Release” and “Statement” for the WHO site
-            if (!newsPage.equals(whoNewsPage) || webElementList.get(i).findElement(newsPage.getNewsTypeBy()).getText().equals("Joint News Release")
-                    || webElementList.get(i).findElement(newsPage.getNewsTypeBy()).getText().equals("Statement")) {
-                newsObject = new NewsObject(
-                        webDriver.getCurrentUrl(),
-                        WebActions.safeFindText(webElementList.get(i), newsPage.getTimeStampBy()),
-                        WebActions.safeFindText(webElementList.get(i), (newsPage.getNewsTypeBy())),
-                        WebActions.safeFindText(webElementList.get(i), (newsPage.getNewsTitleBy())),
-                        WebActions.safeFindAttribute(webElementList.get(i), newsPage.getNewsUrlBy(), "href"),
-                        DateUtils.convertRelativeToAbsolute(WebActions.safeFindText(webElementList.get(i), newsPage.getTimeStampBy()), "dd/MMMM/yyyy", zone)
-                );
-                newsObjectsList.add(newsObject);
+        try {
+            Allure.step("START Method storeNewsInfo");
+            Allure.step("Processing up to 5 articles from the provided list of " + webElementList.size() + " elements.");
+
+            for (int i = 0; i < 5 && i < webElementList.size(); i++) {
+                Allure.step("Processing article at index: " + i);
+
+                String newsType = webElementList.get(i).findElement(newsPage.getNewsTypeBy()).getText();
+                Allure.step("Detected news type: " + newsType);
+
+                // Fill list only with WHO Joint News Release / Statement or any article for other sites
+                if (!newsPage.equals(whoNewsPage) ||
+                        newsType.equals("Joint News Release") ||
+                        newsType.equals("Statement")) {
+
+                    Allure.step("Article meets filter criteria. Extracting details...");
+
+                    NewsObject newsObject = new NewsObject(
+                            webDriver.getCurrentUrl(),
+                            WebActions.safeFindText(webElementList.get(i), newsPage.getTimeStampBy()),
+                            WebActions.safeFindText(webElementList.get(i), newsPage.getNewsTypeBy()),
+                            WebActions.safeFindText(webElementList.get(i), newsPage.getNewsTitleBy()),
+                            WebActions.safeFindAttribute(webElementList.get(i), newsPage.getNewsUrlBy(), "href"),
+                            DateUtils.convertRelativeToAbsolute(
+                                    WebActions.safeFindText(webElementList.get(i), newsPage.getTimeStampBy()),
+                                    "dd/MMMM/yyyy",
+                                    zone
+                            )
+                    );
+
+                    newsObjectsList.add(newsObject);
+                    Allure.step("Added article: \"" + newsObject.getTitle() + "\"");
+                } else {
+                    Allure.step("Article skipped due to type filtering.");
+                }
             }
 
+            Allure.step("FINISH Method storeNewsInfo - Total stored articles: " + newsObjectsList.size());
+
+        } catch (Exception e) {
+            Allure.step("Error occurred in storeNewsInfo: " + e.getMessage());
+            throw e; // Rethrow so the test still fails
         }
 
-        Allure.step("FINISH Method storeNewsInfo");
         return newsObjectsList;
     }
 }
