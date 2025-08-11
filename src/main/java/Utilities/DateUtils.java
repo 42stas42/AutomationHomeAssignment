@@ -53,22 +53,36 @@ public class DateUtils {
         return relativeDate;
     }
 
+    @Step("RUN method safeExtractYear")
     public static String safeExtractYear(String text) {
-        if (text == null || text.isEmpty()) {
-            return "";
-        }
+        try {
+            Allure.step("Starting safeExtractYear with text: \"" + text + "\"");
 
-        // Match years between 1900 and 2099
-        Pattern pattern = Pattern.compile("\\b(19\\d{2}|20\\d{2})\\b");
-        Matcher matcher = pattern.matcher(text);
+            if (text == null || text.isEmpty()) {
+                Allure.step("Input text is null or empty. Returning empty string.");
+                return "";
+            }
 
-        if (matcher.find()) {
-            return matcher.group(1);
+            // Match years between 1900 and 2099
+            Pattern pattern = Pattern.compile("\\b(19\\d{2}|20\\d{2})\\b");
+            Matcher matcher = pattern.matcher(text);
+
+            if (matcher.find()) {
+                String year = matcher.group(1);
+                Allure.step("Year found: " + year);
+                return year;
+            }
+
+            Allure.step("No year found. Returning ***");
+            return "***";
+
+        } catch (Exception e) {
+            Allure.step("Error occurred in safeExtractYear: " + e.getMessage());
+            return "***"; // returning default in case of error
         }
-        return "***";
     }
 
-    @Step("RUN isValidDate")
+    @Step("RUN method isValidDate")
     public static boolean isValidDate(String dateStr, String pattern, Locale locale) {
         Allure.step("Validating date string: \"" + dateStr + "\" against pattern: \"" + pattern + "\" and locale: " + locale);
 
